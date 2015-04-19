@@ -1,5 +1,5 @@
 var fs = require('fs');
   
-exports.dreambuilder = {
+exports.story = {
     port: 8089
 };
