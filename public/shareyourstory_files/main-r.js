@@ -1,25 +1,25 @@
 var reactVersions = {
-  "base": "1.464.20",
-  "animations": "1.464.20",
-  "cloud": "1.464.20",
-  "components": "1.464.20",
-  "componentsPreviewLayer": "1.464.20",
-  "core": "1.464.20",
-  "documentServices": "1.464.20",
-  "editingRendererPlugins": "1.464.20",
-  "fonts": "1.464.20",
-  "layout": "1.464.20",
-  "qaAutomation": "1.464.20",
-  "skins": "1.464.20",
-  "testUtils": "1.464.20",
-  "tpa": "1.464.20",
-  "tpaIntegration": "1.464.20",
-  "tweenEngine": "1.464.20",
-  "utils": "1.464.20",
-  "wixSites": "1.464.20",
-  "wixappsBuilder": "1.464.20",
-  "wixappsClassics": "1.464.20",
-  "wixappsCore": "1.464.20"
+  "base": "1.464.45",
+  "animations": "1.464.45",
+  "cloud": "1.464.45",
+  "components": "1.464.45",
+  "componentsPreviewLayer": "1.464.45",
+  "core": "1.464.45",
+  "documentServices": "1.464.45",
+  "editingRendererPlugins": "1.464.45",
+  "fonts": "1.464.45",
+  "layout": "1.464.45",
+  "qaAutomation": "1.464.45",
+  "skins": "1.464.45",
+  "testUtils": "1.464.45",
+  "tpa": "1.464.45",
+  "tpaIntegration": "1.464.45",
+  "tweenEngine": "1.464.45",
+  "utils": "1.464.45",
+  "wixSites": "1.464.45",
+  "wixappsBuilder": "1.464.45",
+  "wixappsClassics": "1.464.45",
+  "wixappsCore": "1.464.45"
 };
 
 function getViewerRjsConfig (serviceTopology) {
@@ -397,7 +397,11 @@ var packagesUtil = (function () {
         function prefetch(url) {
             var r = new XMLHttpRequest();
             r.onload = function () {
-                contentCache[url] = r.response;
+                try {
+                    contentCache[url] = JSON.parse(r.response);
+                } catch (e) {
+                    // empty
+                }
             };
             r.open('GET', url, true);
             r.setRequestHeader('Accept', 'application/json');
@@ -538,7 +542,7 @@ var packagesUtil = (function () {
         return baseVersion ? getFullBaseUrl(baseVersion) : config.baseUrl;
     }
 
-    config.baseFallbackUrl = getBaseUrl('https://fallback.wix.com/');
+    config.baseFallbackUrl = getBaseUrl(serviceTopology.staticServerFallbackUrl || 'https://fallback.wix.com/');
     if (!siteModel.santaBaseFallbackUrl) {
         siteModel.santaBaseFallbackUrl = config.baseFallbackUrl;
     }
@@ -647,21 +651,18 @@ var packagesUtil = (function () {
         }
 
         function sim(content, options) {
-            if (options.dataType === 'json') {
-                content = JSON.parse(content);
-            }
             options.success.call(options.context || window, content);
         }
 
         function canUseCache(options) {
-            // Not JSONP and is GET
-            return options.dataType !== 'jsonp' && (!options.type || options.type.toUpperCase() === 'GET');
+            return options.dataType === 'json' && (!options.type || options.type.toUpperCase() === 'GET');
         }
 
         function error(msg) {
             try {
                 console.error(msg);
             } catch (e) {
+                // empty
             }
         }
 
