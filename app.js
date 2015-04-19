@@ -7,7 +7,7 @@ var express = require('express'),
 
 var app = express();
 
-app.set('port', config.port);
+app.set('port', process.env.PORT || 80);
 app.engine('html', hbs({
   defaultLayout: 'layout',
   layoutsDir: 'views',
