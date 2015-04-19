@@ -18,7 +18,9 @@ app.disable('etag');
 app.use("/", express.static(__dirname + "/public/"));
 
 app.all('/', story.index);
-app.get('/physics', story.physics);
+['physics', 'events', 'donate', 'welcome'].forEach(function(e) {
+  app.get('/'+e, story[e]);
+});
 
 var server = http.createServer(app).listen(app.get('port'), function() {
   console.log('Dreambuilder Webhook server listening on port ' + app.get('port'));
